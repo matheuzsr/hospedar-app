@@ -8,11 +8,21 @@
     "dev:inspect": "nuxt dev --inspect",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "dev:server": "nuxt dev --no-client"
   },
   "dependencies": {
+    "@headlessui/vue": "^1.7.23",
+    "@heroicons/vue": "^2.2.0",
+    "@supabase/supabase-js": "^2.48.1",
+    "jsonwebtoken": "^9.0.2",
     "nuxt": "^3.15.2",
     "vue": "latest",
+    "vue-datepicker-next": "^1.0.3",
     "vue-router": "latest"
+  },
+  "devDependencies": {
+    "@nuxtjs/tailwindcss": "^6.13.1",
+    "@types/jsonwebtoken": "^9.0.8"
   }
 }
