@@ -1,3 +1,7 @@
+[![Netlify Status](https://api.netlify.com/api/v1/badges/e4d8e85c-9304-43e6-ad9d-a2300bdc6973/deploy-status)](https://app.netlify.com/sites/hospedar-app/deploys)
+
+
+
 # Nuxt Minimal Starter
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
