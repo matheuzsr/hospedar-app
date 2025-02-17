@@ -1,28 +1,29 @@
-import { HotelService } from "~/server/service/supabase/HotelService";
-import { BadRequestError, ValidationError } from "../errors";
+import { HotelService } from "~/server/service/supabase/HotelService"
+import { BadRequestError, ValidationError } from "../errors"
 
 export class HotelController {
-  private hotelService = new HotelService();
+  private hotelService = new HotelService()
   public async get(hotelId?: number) {
-    if (!hotelId) throw new ValidationError('Hotel ID is required');
-    return this.hotelService.get(hotelId);
+    if (!hotelId) throw new ValidationError('Hotel ID is required')
+
+    return this.hotelService.get(hotelId)
   }
 
   public async getList() {
-    return this.hotelService.getList();
+    return this.hotelService.getList()
   }
   public async edit(hotelId: number, hotelData: any) {
-    if (!hotelId) throw new ValidationError('Hotel ID is required');
+    if (!hotelId) throw new ValidationError('Hotel ID is required')
     if (!hotelData || Object.keys(hotelData).length === 0)
-      throw new BadRequestError('Data to update is required');
+      throw new BadRequestError('Data to update is required')
 
-    return this.hotelService.edit(hotelId, hotelData);
+    return this.hotelService.edit(hotelId, hotelData)
   }
 
   public async create(hotelData: any) {
     if (!hotelData || Object.keys(hotelData).length === 0)
-      throw new BadRequestError('Data to update is required');
+      throw new BadRequestError('Data to update is required')
 
-    return this.hotelService.create(hotelData);
+    return this.hotelService.create(hotelData)
   }
 }

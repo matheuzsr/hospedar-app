@@ -9,7 +9,9 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "dev:server": "nuxt dev --no-client"
+    "dev:server": "nuxt dev --no-client",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
   },
   "dependencies": {
     "@headlessui/vue": "^1.7.23",
@@ -23,6 +25,7 @@
     "vue-router": "latest"
   },
   "devDependencies": {
+    "@nuxt/eslint": "^1.0.1",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@types/bcrypt": "^5.0.2",
     "@types/jsonwebtoken": "^9.0.8"
