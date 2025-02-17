@@ -1,9 +1,10 @@
-import { SignInService } from "~/server/service/supabase/sign/signin/SignInService"
+import { defineSafeEventHandler } from "~/server"
+import { SignInController } from "~/server/controller/SignInController"
 
-export default defineEventHandler(async (event) => {
+export default defineSafeEventHandler(async (event) => {
   const body = await readBody(event)
-  const service = new SignInService()
-  const response = await service.login(body)
+  const controller = new SignInController()
+  const response = await controller.login(body)
 
   return response
 })

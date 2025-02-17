@@ -1,5 +1,5 @@
 import { HotelService } from "~/server/service/supabase/HotelService"
-import { BadRequestError, ValidationError } from "../errors"
+import { BadRequestError, ValidationError } from "../errors/errors"
 
 export class HotelController {
   private hotelService = new HotelService()

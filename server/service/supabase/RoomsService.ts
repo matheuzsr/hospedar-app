@@ -1,5 +1,5 @@
 import { supabase } from "~/infra/SupabaseAdapter"
-import { InternalServerError, NotFoundError } from "~/server/errors"
+import { InternalServerError, NotFoundError } from "~/server/errors/errors"
 
 export class RoomService {
   async getList(hotelId: number) {

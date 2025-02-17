@@ -1,6 +1,6 @@
 import { defineRequestMiddleware, getHeader } from 'h3'
 import { SignInService } from '../../service/supabase/sign/signin/SignInService'
-import { UnauthorizedError } from '~/server/errors'
+import { UnauthorizedError } from '~/server/errors/errors'
 
 const ignorePaths = ['signin', 'signup']
 
