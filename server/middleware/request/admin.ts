@@ -1,10 +1,10 @@
-import { defineRequestMiddleware, getHeader } from 'h3'
+import { getHeader } from 'h3'
 import { SignInService } from '../../service/supabase/sign/signin/SignInService'
 import { UnauthorizedError } from '~/server/errors/errors'
 
 const ignorePaths = ['signin', 'signup']
 
-export default defineRequestMiddleware((event) => {
+export default eventHandler(async (event) => {
   if (ignorePaths.some((path) => event.path.includes(path))) return
   if (!event.path.startsWith('/api/admin')) return
 

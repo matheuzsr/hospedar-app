@@ -4,7 +4,7 @@ import { ForbiddenError, UnauthorizedError, ValidationError } from '~/server/err
 import type { UserDto, UserService } from '../../UserService'
 
 export class SignInService {
-  constructor(private userService: UserService) { }
+  constructor(private userService?: UserService) { }
   public async login(user: UserDto): Promise<{ token: string }> {
     try {
       const validUser = await this.getValidUser(user)
@@ -17,7 +17,7 @@ export class SignInService {
   }
 
   private async getValidUser(user: UserDto): Promise<UserDto> {
-    const existingUser = await this.userService.getUser(user)
+    const existingUser = await this.userService?.getUser(user)
     const isValidPassword = await PasswordHasherHelper.verifyPassword(user.password || '', existingUser.encoded_password)
     if (!isValidPassword) throw new ForbiddenError('Senha incorreta')
 
