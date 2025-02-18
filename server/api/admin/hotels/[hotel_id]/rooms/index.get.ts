@@ -3,5 +3,5 @@ import { defineSafeEventHandler } from '~/server'
 
 export default defineSafeEventHandler(async (event) => {
   const hotelId = Number(getRouterParam(event, 'hotel_id'))
-  sendRedirect(event, `/api/hotels/${hotelId}/rooms`, 301)
+  sendRedirect(event, `/api/hotels/${hotelId}/rooms`, 307)
 })

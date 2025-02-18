@@ -1,6 +1,6 @@
 import jwt from 'jsonwebtoken'
 import { PasswordHasherHelper } from '~/server/helper/PasswordHasherHelper'
-import { ForbiddenError, UnauthorizedError, ValidationError } from '~/server/errors/errors'
+import { ForbiddenError, UnauthorizedError } from '~/server/errors/errors'
 import type { UserDto, UserService } from '../../UserService'
 
 export class SignInService {
@@ -42,7 +42,6 @@ export class SignInService {
       return !!decoded
     } catch (error: any) {
       console.error('Erro ao validar o token', error)
-      throw new ValidationError('Erro ao validar o token')
 
       return false
     }
