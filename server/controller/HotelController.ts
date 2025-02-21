@@ -26,4 +26,10 @@ export class HotelController {
 
     return this.hotelService.create(hotelData)
   }
+
+  public async delete(hotelId: number) {
+    if (!hotelId) throw new ValidationError('Hotel ID is required')
+
+    return this.hotelService.delete(hotelId)
+  }
 }

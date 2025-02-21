@@ -28,4 +28,10 @@ export class RoomController {
 
     return this.roomService.create(hotelId, roomData)
   }
+
+  public async delete(hotelId: number, roomId: number) {
+    if (!hotelId || !roomId) throw new ValidationError('Hotel ID and Room ID is required')
+
+    return this.roomService.delete(hotelId, roomId)
+  }
 }

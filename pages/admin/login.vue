@@ -8,7 +8,7 @@
           <div
             class="bg-slate-700 w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg"
           >
-            <span class="text-white text-2xl font-bold">VC</span>
+          <KeyIcon class="w-10 h-10 text-white" />
           </div>
           <h2 class="text-3xl font-bold text-slate-800">
             Login Administrativo
@@ -49,12 +49,13 @@
             >
           </div>
 
-          <button
+          <Button
             type="submit"
             class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-slate-700 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
+            :loading="loading"
           >
             Entrar
-          </button>
+        </Button>
         </form>
       </div>
     </div>
@@ -64,13 +65,18 @@
 <script setup lang="ts">
 import { ref } from "vue"
 import { SignInService } from "~/infra/service/signin/SignInService"
+import {KeyIcon } from '@heroicons/vue/24/outline'
+import Button from "~/components/ui/button/Button.vue"
 
 const email = ref("pedrao@gmail.com")
 const password = ref("deborinha123")
+const loading = ref(false)
 
 const handleLogin = async () => {
   const service = new SignInService()
+  loading.value = true
   const response = await service.login({ username: email.value, password: password.value })
+  loading.value = false
   if(response.error) return
   useRouter().push("/admin/hotels")
 }

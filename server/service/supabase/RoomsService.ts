@@ -3,7 +3,7 @@ import { InternalServerError, NotFoundError } from "~/server/errors/errors"
 
 export class RoomService {
   async getList(hotelId: number) {
-    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId)
+    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('deleted_at', null)
     if (error) throw new InternalServerError('Error getting rooms')
     if (!data) throw new NotFoundError('Rooms not found')
 
@@ -11,7 +11,7 @@ export class RoomService {
   }
 
   async get(hotelId: number, roomId: number) {
-    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('id', roomId).single()
+    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('id', roomId).eq('deleted_at', null).single()
     if (error) throw new InternalServerError('Error getting room')
     if (!data) throw new NotFoundError('Room not found')
 
@@ -28,6 +28,13 @@ export class RoomService {
   public async create(hotelId: number, roomData: any) {
     const { error, data } = await supabase.from('room').insert({ ...roomData, hotel_id: hotelId }).select().single()
     if (error || !data) throw new InternalServerError('Error creating room')
+
+    return data
+  }
+
+  public async delete(hotelId: number, roomId: number) {
+    const { data, error } = await supabase.from('room').update({ deleted_at: new Date() }).eq('hotel_id', hotelId).eq('id', roomId).select().single()
+    if (error || !data) throw new InternalServerError('Error deleting room')
 
     return data
   }

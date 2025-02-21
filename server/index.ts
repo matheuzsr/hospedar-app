@@ -16,7 +16,7 @@ export function defineSafeEventHandler<T>(
             
             return sendError(event, createError({
                 statusCode: error.statusCode || 500,
-                statusMessage: error.message || 'Erro interno na API',
+                message: error.message || 'Erro interno na API',
                 data: error.data
             }))
         }
