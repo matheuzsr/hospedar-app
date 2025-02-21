@@ -3,7 +3,7 @@ import { InternalServerError, NotFoundError } from "~/server/errors/errors"
 
 export class RoomService {
   async getList(hotelId: number) {
-    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('deleted_at', null)
+    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).is('deleted_at', null)
     if (error) throw new InternalServerError('Error getting rooms')
     if (!data) throw new NotFoundError('Rooms not found')
 
@@ -11,7 +11,7 @@ export class RoomService {
   }
 
   async get(hotelId: number, roomId: number) {
-    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('id', roomId).eq('deleted_at', null).single()
+    const { data, error } = await supabase.from('room').select('*').eq('hotel_id', hotelId).eq('id', roomId).is('deleted_at', null).single()
     if (error) throw new InternalServerError('Error getting room')
     if (!data) throw new NotFoundError('Room not found')
 
