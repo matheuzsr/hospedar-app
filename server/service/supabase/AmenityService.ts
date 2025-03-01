@@ -17,4 +17,11 @@ export class AmenityService {
 
     return data
   }
+
+  async getList(): Promise<AmenityDto[]> {
+    const { data, error } = await supabase.from('amenity').select().is('deleted_at', null)
+    if (error) throw new InternalServerError('Error getting amenities')
+
+    return data
+  }
 }

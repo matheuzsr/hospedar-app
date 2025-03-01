@@ -8,4 +8,8 @@ export class HotelService {
   async delete(hotelId: number) {
     return customFetch(`/api/admin/hotels/${hotelId}`, { method: 'DELETE' })
   }
+
+  async edit(hotelId: number, data: any) {
+    return customFetch(`/api/admin/hotels/${hotelId}`, { method: 'PUT', body: JSON.stringify(data) })
+  }
 }

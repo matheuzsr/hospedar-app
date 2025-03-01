@@ -32,21 +32,37 @@
         </div>
 
         <div class="p-4">
-          <BaseTable :items="hotelsWithFilter" :headers max-height="600px">
+          <BaseTable
+            :items="hotelsWithFilter"
+            :headers
+            max-height="600px"
+            :loading
+          >
+            <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template #item.action="{ item }">
               <div class="flex gap-2 items-center">
                 <PencilSquareIcon
                   class="w-5 h-5 cursor-pointer hover:opacity-10"
                   @click="handleEditHotel(item)"
                 />
-                <TrashIcon class="w-5 h-5 cursor-pointer hover:text-red-300" @click="handleDeleteHotel(item)" />
+                <Button
+                  class="text-red-300 shadow-none hover:text-red-200 hover:bg-transparent"
+                  variant="ghost"
+                  size="icon"
+                  :loading="!!item.loading"
+                  @click="handleDeleteHotel(item)"
+                >
+                  <TrashIcon
+                    class="w-[24px] h-[24px] cursor-pointer hover:text-red-300"
+                  />
+                </Button>
               </div>
             </template>
           </BaseTable>
         </div>
       </div>
     </div>
-    <HotelEditModal v-model="showEditHotelModal" />
+    <HotelEditModal v-model="showEditHotelModal" :data="editHotelData" />
   </div>
 </template>
 
@@ -62,15 +78,22 @@ import { HotelService } from "~/infra/service/HotelService"
 import BaseTable from "~/src/components/@base/BaseTable.vue"
 import HotelEditModal from "~/src/components/HotelEditModal.vue"
 import Input from "~/components/ui/input/Input.vue"
+import Button from "~/components/ui/button/Button.vue"
+import {
+  replaceObjectKeys,
+  snakeToCamel,
+} from "~/server/helper/properties.helper"
 
 const showEditHotelModal = ref(false)
+const editHotelData = ref({})
 const hotels = ref()
 const search = ref("")
-onBeforeMount(async () => {
-  
-})
+const loading = ref(false)
+onBeforeMount(async () => getList())
 
 const hotelsWithFilter = computed(() => {
+  if (!hotels.value) return []
+
   return hotels.value?.filter((hotel: any) => {
     return hotel.name.toLowerCase().includes(search.value.toLowerCase())
   })
@@ -91,19 +114,20 @@ const headers = computed(() => {
       text: "Descrição",
     },
     {
-      value: "street_name",
+      value: "streetName",
       text: "Rua",
     },
     {
-      value: "address_neighborhood",
+      value: "addressNeighborhood",
       text: "Bairro",
     },
     {
-      value: "zip_code",
+      value: "zipCode",
       text: "CEP",
+      width: "100px",
     },
     {
-      value: "address_number",
+      value: "addressNumber",
       text: "Número",
     },
     {
@@ -115,11 +139,11 @@ const headers = computed(() => {
       text: "Longitude",
     },
     {
-      value: "checkin_time",
+      value: "checkinTime",
       text: "Checkin",
     },
     {
-      value: "checkout_time",
+      value: "checkoutTime",
       text: "Checkout",
     },
     {
@@ -131,19 +155,26 @@ const headers = computed(() => {
 
 const service = new HotelService()
 function handleEditHotel(data?: any) {
-  console.log(data)
+  editHotelData.value = data || {}
   showEditHotelModal.value = true
 }
 
-function handleDeleteHotel(data: any) {
-  debugger
-  service.delete(data.id)
+async function handleDeleteHotel(data: any) {
+  data.loading = true
+  await service.delete(data.id)
+  data.loading = false
 
   getList()
 }
 
 async function getList() {
+  loading.value = true
   const response = await service.getList()
-  hotels.value = response
+  hotels.value = await formatList(response)
+  loading.value = false
+}
+
+async function formatList(list: any) {
+  return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
 }
 </script>

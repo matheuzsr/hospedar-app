@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center ">
+  <div class="flex items-center">
     <Label v-if="label" class="text-right">{{ label }}</Label>
     <div class="relative w-full">
       <Button
@@ -70,9 +70,9 @@ interface Option {
   value: string
 }
 
+const modelValue = defineModel<string[]>({ type: Array, default: () => [] })
 const props = defineProps<{
   label?: string
-  modelValue: string[]
   options: Option[]
   placeholder?: string
 }>()
@@ -87,7 +87,7 @@ const newItemInput = ref("")
 const inputRef = ref<HTMLInputElement>()
 
 const selectedOptions = computed(() =>
-  props.options.filter((option) => props.modelValue.includes(option.value))
+  props.options.filter((option) => modelValue.value?.includes(option.value))
 )
 
 const displayValue = computed(
@@ -101,7 +101,7 @@ function toggle() {
 }
 
 function toggleOption(option: Option) {
-  const newValue = [...props.modelValue]
+  const newValue = [...modelValue.value]
   const index = newValue.indexOf(option.value)
 
   if (index === -1) {
