@@ -22,7 +22,7 @@ const sizeIcon = computed(() => {
   const config: { [key: string]: string } = {
     sm: "8px",
     lg: "16px",
-    icon: "10px",
+    icon: "16px",
     default: "12px",
   }
   if (!props.size) return config.default
@@ -49,8 +49,8 @@ const sizeIcon = computed(() => {
 
 <style lang="scss" scoped>
 .loader {
-  border: 1px solid #f3f3f3;
-  border-top: px solid #f3f3f3;
+  border: 1px solid gray;
+  border-top: 1px solid black;
   border-radius: 50%;
   width: var(--sizeIcon);
   height: var(--sizeIcon);
