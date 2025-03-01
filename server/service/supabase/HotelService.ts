@@ -4,7 +4,7 @@ import { InternalServerError, NotFoundError } from "~/server/errors/errors"
 export class HotelService {
   async get(hotelId: number) {
     const { data, error } = await supabase.from('hotel').select('*').eq('id', hotelId).is('deleted_at', null).single()
-
+    
     if (error) throw new InternalServerError('Error getting hotel')
     if (!data) throw new NotFoundError('Hotel not found')
 
