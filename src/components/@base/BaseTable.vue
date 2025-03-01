@@ -1,5 +1,6 @@
 <template>
   <div class="w-full">
+    <Progress v-show="loading" infinite class="h-2" />
     <div class="rounded-md border">
       <div
         class="table__content relative w-full overflow-auto"
@@ -16,6 +17,7 @@
               <th
                 v-for="header in headers"
                 :key="header.value"
+                :style="{ width: header.width }"
                 class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
               >
                 {{ header.text }}
@@ -46,9 +48,12 @@
 </template>
 
 <script setup lang="ts">
+import Progress from "~/components/ui/progress/Progress.vue"
+
 interface Header {
   text: string
   value: string
+  width?: string
 }
 
 interface Item {
@@ -59,6 +64,7 @@ defineProps<{
   headers: Header[]
   items: Item[]
   maxHeight?: string
+  loading?: boolean
 }>()
 </script>
 
