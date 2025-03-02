@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center">
+  <div v-click-outside="handleClickOutside" class="flex items-center">
     <Label v-if="label" class="text-right">{{ label }}</Label>
     <div class="relative w-full">
       <Button
@@ -32,7 +32,7 @@
           </Button>
         </div>
 
-        <div class="max-h-[200px] overflow-auto">
+        <div class="options" style="max-height: 120px; overflow-y: auto" @click.stop>
           <div
             v-for="option in options"
             :key="option.value"
@@ -56,7 +56,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed } from "vue"
+import { ref, computed, onMounted, onBeforeUnmount } from "vue"
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -90,11 +90,18 @@ const selectedOptions = computed(() =>
   props.options.filter((option) => modelValue.value?.includes(option.value))
 )
 
-const displayValue = computed(
-  () =>
-    selectedOptions.value.map((option) => option.label).join(", ") ||
-    props.placeholder
-)
+const displayValue = computed(() => {
+
+  return props.placeholder
+  // const truncatedValue = selectedOptions.value
+  //   .map((option) => option.label)
+  //   .join(", ")
+  //   .slice(0, 30)
+  //   .concat("...")
+  // if (selectedOptions.value.length === 0) return props.placeholder
+
+  // return selectedOptions.value ? truncatedValue : props.placeholder
+})
 
 function toggle() {
   isOpen.value = !isOpen.value
@@ -126,4 +133,38 @@ function onKeyDown(e: KeyboardEvent) {
     handleCreateNew()
   }
 }
+
+function handleClickOutside(event: MouseEvent) {
+  if (!(event.target as Element).closest(".relative")) {
+    isOpen.value = false
+  }
+}
+
+onMounted(() => {
+  document.addEventListener("click", handleClickOutside)
+})
+
+onBeforeUnmount(() => {
+  document.removeEventListener("click", handleClickOutside)
+})
 </script>
+
+<style lang="scss" scoped>
+.options {
+  &::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #e0e1eb;
+    padding: 0 10px;
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #bfc0cc;
+    border-radius: 8px;
+  }
+}
+</style>

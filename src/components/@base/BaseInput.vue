@@ -1,7 +1,7 @@
 <template>
   <div class="flex items-center gap-4">
     <Label v-if="label">{{ label }}</Label>
-    <Input :id="label" v-model="modelValue" />
+    <Input :id="label" v-model="modelValue" :type />
   </div>
 </template>
 
@@ -13,5 +13,6 @@ const modelValue = defineModel<string>()
 
 defineProps<{
   label?: string
+  type?: HTMLInputElement["type"]
 }>()
 </script>

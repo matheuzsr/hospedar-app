@@ -62,7 +62,7 @@
         </div>
       </div>
     </div>
-    <HotelEditModal v-model="showEditHotelModal" :data="editHotelData" />
+    <HotelEditModal v-model="showEditHotelModal" :data="editHotelData"  @saved="getList"/>
   </div>
 </template>
 
@@ -79,10 +79,6 @@ import BaseTable from "~/src/components/@base/BaseTable.vue"
 import HotelEditModal from "~/src/components/HotelEditModal.vue"
 import Input from "~/components/ui/input/Input.vue"
 import Button from "~/components/ui/button/Button.vue"
-import {
-  replaceObjectKeys,
-  snakeToCamel,
-} from "~/server/helper/properties.helper"
 
 const showEditHotelModal = ref(false)
 const editHotelData = ref({})
@@ -170,11 +166,7 @@ async function handleDeleteHotel(data: any) {
 async function getList() {
   loading.value = true
   const response = await service.getList()
-  hotels.value = await formatList(response)
+  hotels.value = response
   loading.value = false
-}
-
-async function formatList(list: any) {
-  return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
 }
 </script>

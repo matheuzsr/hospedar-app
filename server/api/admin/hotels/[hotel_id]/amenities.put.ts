@@ -8,7 +8,7 @@ export default defineSafeEventHandler(async (event) => {
   const hotelAmenity = { hotelId, name: body.name, optional: body.optional } as HotelAmenityDto
 
   const controller = new HotelAmenityController()
-  const response = await controller.create(hotelAmenity)
+  const response = await controller.createOrEdit(hotelAmenity)
 
   return response
 })

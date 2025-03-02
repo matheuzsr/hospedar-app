@@ -3,7 +3,7 @@ import { InternalServerError } from "~/server/errors/errors"
 
 export interface AmenityDto {
   id?: number
-  name: string
+  name?: string
 }
 
 export class AmenityService {

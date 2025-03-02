@@ -1,6 +1,11 @@
 <template>
   <Dialog :open="modelValue">
-    <DialogContent class="max-w-[80vw]" :width @outside-click="handleClose"  @close="handleClose ">
+    <DialogContent
+      class="max-w-[80vw]"
+      :width
+      @outside-click="handleClose"
+      @close="handleClose"
+    >
       <DialogHeader>
         <DialogTitle>{{ title }}</DialogTitle>
         <DialogDescription>{{ description }}</DialogDescription>
@@ -12,7 +17,12 @@
         <Button v-if="cancelButton" @click="cancelButton.action">
           {{ cancelButton.text }}
         </Button>
-        <Button v-if="saveButton" type="submit" @click="saveButton.action">
+        <Button
+          v-if="saveButton"
+          type="submit"
+          :loading="saveButton.loading"
+          @click="saveButton.action"
+        >
           {{ saveButton.text }}
         </Button>
       </DialogFooter>
@@ -40,6 +50,7 @@ const props = defineProps<{
   saveButton?: {
     text: string
     action: () => void
+    loading: boolean
   }
   cancelButton?: {
     text: string
