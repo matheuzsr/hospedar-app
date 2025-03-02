@@ -9,7 +9,7 @@
 import Input from "~/components/ui/input/Input.vue"
 import Label from "~/components/ui/label/Label.vue"
 
-const modelValue = defineModel<string>()
+const modelValue = defineModel<string | number>()
 
 defineProps<{
   label?: string
