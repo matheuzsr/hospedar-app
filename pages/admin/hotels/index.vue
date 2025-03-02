@@ -41,8 +41,9 @@
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template #item.action="{ item }">
               <div class="flex gap-2 items-center">
+                <BuildingOfficeIcon class="w-5 h-5 cursor-pointer hover:opacity-30" />
                 <PencilSquareIcon
-                  class="w-5 h-5 cursor-pointer hover:opacity-10"
+                  class="w-5 h-5 cursor-pointer hover:opacity-30"
                   @click="handleEditHotel(item)"
                 />
                 <Button
@@ -62,7 +63,11 @@
         </div>
       </div>
     </div>
-    <HotelEditModal v-model="showEditHotelModal" :data="editHotelData"  @saved="getList"/>
+    <HotelEditModal
+      v-model="showEditHotelModal"
+      :data="editHotelData"
+      @saved="getList"
+    />
   </div>
 </template>
 
@@ -73,6 +78,7 @@ import {
   PlusIcon,
   MagnifyingGlassIcon,
   TrashIcon,
+  BuildingOfficeIcon,
 } from "@heroicons/vue/24/outline"
 import { HotelService } from "~/infra/service/HotelService"
 import BaseTable from "~/src/components/@base/BaseTable.vue"

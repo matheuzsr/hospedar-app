@@ -3,10 +3,10 @@
     v-model="modelValue"
     title="Edição do Hotel"
     description="Edite as informações do Hotel Fazenda Império do Vale"
-    width="600px"
+    width="540px"
     :save-button="{ text: 'Salvar', action: handleSave, loading: loading }"
   >
-    <div class="flex flex-col gap-2 py-4">
+    <div class="flex flex-col gap-4 py-4">
       <div class="grid gap-4" style="grid-template-columns: 1fr 2fr">
         <div class="flex flex-col w-full">
           <Label>Nome</Label>

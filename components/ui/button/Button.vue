@@ -38,11 +38,9 @@ const sizeIcon = computed(() => {
     :class="cn(buttonVariants({ variant, size }), props.class)"
     :disabled="loading"
   >
+    <slot />
     <template v-if="loading">
       <span :style="{ '--sizeIcon': sizeIcon }" class="loader" />
-    </template>
-    <template v-else>
-      <slot />
     </template>
   </Primitive>
 </template>
