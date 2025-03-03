@@ -4,7 +4,7 @@
       <div class="container mx-auto px-4 py-6">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold text-slate-800">
-            Gerenciamento de Quartos
+            Gerenciamento de hotel
             <template v-if="hotelName">| {{ hotelName }}</template>
           </h1>
           <Button
