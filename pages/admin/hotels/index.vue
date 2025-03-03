@@ -166,7 +166,7 @@ function handleEditHotel(data?: any) {
 
 const router = useRouter()
 function handleOpenRoom(data: any) {
-  router.push(`/admin/hotels/${data.id}/rooms`)
+  router.push(`/admin/hotels/${data.id}`)
 }
 
 async function handleDeleteHotel(data: any) {
