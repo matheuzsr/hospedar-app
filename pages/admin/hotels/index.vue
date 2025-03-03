@@ -4,7 +4,7 @@
       <div class="container mx-auto px-4 py-6">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold text-slate-800">
-            Gerenciamento de Hotéis
+            Gerenciamento geral
           </h1>
           <Button
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-700 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
