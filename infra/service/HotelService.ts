@@ -14,9 +14,17 @@ export class HotelService {
     }
 
   }
+  async get(id: number) {
+    try {
+      const response = await customFetch(`/api/admin/hotels/${id}`)
 
-  private formatSnakeToCamelList(list: any) {
-    return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
+      return replaceObjectKeys(response, snakeToCamel)
+    }
+    catch (error: any) {
+      console.error(`[Erro] ${error.message}`)
+      console.error(`[Stack] ${error.stack}`)
+    }
+
   }
 
   async delete(hotelId: number) {
@@ -33,5 +41,9 @@ export class HotelService {
     const formattedData = replaceObjectKeys(data, camelToSnake)
 
     return customFetch(`/api/admin/hotels`, { method: 'POST', body: JSON.stringify((formattedData)) })
+  }
+
+  private formatSnakeToCamelList(list: any) {
+    return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
   }
 }

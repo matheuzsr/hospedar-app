@@ -4,20 +4,25 @@
       <div class="container mx-auto px-4 py-6">
         <div class="flex justify-between items-center">
           <h1 class="text-2xl font-bold text-slate-800">
-            Gerenciamento de Hotéis
+            Gerenciamento de Quartos
+            <template v-if="hotelName">| {{ hotelName }}</template>
           </h1>
           <Button
             class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-700 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
-            @click="handleEditHotel"
+            @click="handleEditRoom"
           >
             <PlusIcon class="w-5 h-5 mr-2" />
-            Novo Hotel
+            Novo Quarto
           </Button>
         </div>
       </div>
     </div>
 
     <div class="container mx-auto px-4 py-8">
+      <Button class="mb-4" variant="outline" outlined @click="goBack">
+        <ArrowLeftIcon class="w-5 h-5 mr-2" />
+        Voltar
+      </Button>
       <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
         <div class="p-6 border-b border-gray-200">
           <div class="flex items-center space-x-4">
@@ -25,7 +30,7 @@
             <Input
               v-model="search"
               type="text"
-              placeholder="Buscar hotéis..."
+              placeholder="Buscar quarto..."
               class="flex-1 border-0 focus:ring-0 text-slate-800 placeholder-slate-400 text-sm"
             />
           </div>
@@ -33,7 +38,7 @@
 
         <div class="p-4">
           <BaseTable
-            :items="hotelsWithFilter"
+            :items="roomWithFilter"
             :headers
             max-height="600px"
             :loading
@@ -41,20 +46,16 @@
             <!-- eslint-disable-next-line vue/valid-v-slot -->
             <template #item.action="{ item }">
               <div class="flex gap-2 items-center">
-                <BuildingOfficeIcon
-                  class="w-5 h-5 cursor-pointer hover:opacity-30"
-                  @click="handleOpenRoom(item)"
-                />
                 <PencilSquareIcon
                   class="w-5 h-5 cursor-pointer hover:opacity-30"
-                  @click="handleEditHotel(item)"
+                  @click="handleEditRoom(item)"
                 />
                 <Button
                   class="text-red-300 shadow-none hover:text-red-200 hover:bg-transparent"
                   variant="ghost"
                   size="icon"
                   :loading="!!item.loading"
-                  @click="handleDeleteHotel(item)"
+                  @click="handleDeleteRoom(item)"
                 >
                   <TrashIcon
                     class="w-[24px] h-[24px] cursor-pointer hover:text-red-300"
@@ -66,9 +67,10 @@
         </div>
       </div>
     </div>
-    <HotelEditModal
-      v-model="showEditHotelModal"
-      :data="editHotelData"
+    <RoomEditModal
+      v-model="showEditRoomModal"
+      :data="editRoomData"
+      :hotel-id
       @saved="getList"
     />
   </div>
@@ -81,26 +83,29 @@ import {
   PlusIcon,
   MagnifyingGlassIcon,
   TrashIcon,
-  BuildingOfficeIcon,
+  ArrowLeftIcon,
 } from "@heroicons/vue/24/outline"
-import { HotelService } from "~/infra/service/HotelService"
+import { RoomService } from "~/infra/service/RoomService"
 import BaseTable from "~/src/components/@base/BaseTable.vue"
-import HotelEditModal from "~/src/components/HotelEditModal.vue"
+import RoomEditModal from "~/src/components/RoomEditModal.vue"
 import Input from "~/components/ui/input/Input.vue"
 import Button from "~/components/ui/button/Button.vue"
+import { HotelService } from "~/infra/service/HotelService"
 
-const showEditHotelModal = ref(false)
-const editHotelData = ref({})
-const hotels = ref()
+const showEditRoomModal = ref<boolean>(false)
+const editRoomData = ref({})
+const room = ref()
 const search = ref("")
 const loading = ref(false)
+const hotelName = ref()
+const hotelId = computed(() => Number(route.params.hotel_id))
 onBeforeMount(async () => getList())
 
-const hotelsWithFilter = computed(() => {
-  if (!hotels.value) return []
+const roomWithFilter = computed(() => {
+  if (!room.value) return []
 
-  return hotels.value?.filter((hotel: any) => {
-    return hotel.name.toLowerCase().includes(search.value.toLowerCase())
+  return room.value?.filter((Room: any) => {
+    return Room.name.toLowerCase().includes(search.value.toLowerCase())
   })
 })
 
@@ -108,7 +113,7 @@ const headers = computed(() => {
   return [
     {
       value: "action",
-      text: "Ação",
+      text: "Ações",
     },
     {
       value: "name",
@@ -119,68 +124,100 @@ const headers = computed(() => {
       text: "Descrição",
     },
     {
-      value: "streetName",
-      text: "Rua",
+      value: "bedType",
+      text: "Tipo de Cama",
     },
     {
-      value: "addressNeighborhood",
-      text: "Bairro",
+      value: "hasAirConditioning",
+      text: "Ar-condicionado",
     },
     {
-      value: "zipCode",
-      text: "CEP",
-      width: "100px",
+      value: "hasTv",
+      text: "TV",
     },
     {
-      value: "addressNumber",
-      text: "Número",
+      value: "tvType",
+      text: "Tipo de TV",
     },
     {
-      value: "latitude",
-      text: "Latitude",
+      value: "hasMinibar",
+      text: "Minibar",
     },
     {
-      value: "longitude",
-      text: "Longitude",
+      value: "bathroomType",
+      text: "Tipo de Banheiro",
     },
     {
-      value: "checkinTime",
-      text: "Checkin",
+      value: "viewType",
+      text: "Tipo de Vista",
     },
     {
-      value: "checkoutTime",
-      text: "Checkout",
+      value: "smokingAllowed",
+      text: "Permite Fumar",
     },
     {
-      value: "actions",
-      text: "Ações",
+      value: "maxGuests",
+      text: "Máximo de Hóspedes",
+    },
+    {
+      value: "size",
+      text: "Tamanho (m²)",
+    },
+    {
+      value: "price_per_night",
+      text: "Preço por Noite",
+    },
+    {
+      value: "additional_features",
+      text: "Características Adicionais",
+    },
+    {
+      value: "floor",
+      text: "Andar",
+    },
+    {
+      value: "status",
+      text: "Status",
     },
   ]
 })
 
-const service = new HotelService()
-function handleEditHotel(data?: any) {
-  editHotelData.value = data || {}
-  showEditHotelModal.value = true
+const service = new RoomService()
+function handleEditRoom(data?: any) {
+  editRoomData.value = data || {}
+  showEditRoomModal.value = true
 }
 
-const router = useRouter()
-function handleOpenRoom(data: any) {
-  router.push(`/admin/hotels/${data.id}/rooms`)
-}
-
-async function handleDeleteHotel(data: any) {
-  data.loading = true
-  await service.delete(data.id)
-  data.loading = false
+async function handleDeleteRoom(room: any) {
+  const hotelId = Number(route.params.hotel_id)
+  room.loading = true
+  await service.delete(hotelId, room.id)
+  room.loading = false
 
   getList()
 }
 
 async function getList() {
   loading.value = true
-  const response = await service.getList()
-  hotels.value = response
+  const response = await service.getList(hotelId.value)
+  loading.value = false
+
+  room.value = response.data
+}
+
+const route = useRoute()
+const hotelService = new HotelService()
+async function getHotelData() {
+  loading.value = true
+  const response = await hotelService.get(hotelId.value)
+  hotelName.value = response?.name
   loading.value = false
 }
+
+const router = useRouter()
+function goBack() {
+  router.push("/admin/hotels")
+}
+
+onBeforeMount(async () => getHotelData())
 </script>

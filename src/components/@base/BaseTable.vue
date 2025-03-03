@@ -14,14 +14,14 @@
             <tr
               class="border-b transition-colors hover:bg-muted/50 data-[state=selected]:bg-muted"
             >
-              <th
+                <th
                 v-for="header in headers"
                 :key="header.value"
-                :style="{ width: header.width }"
-                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground"
-              >
+                :style="{ minWidth: header.width || 'auto' }"
+                class="h-12 px-4 text-left align-middle font-medium text-muted-foreground whitespace-nowrap"
+                >
                 {{ header.text }}
-              </th>
+                </th>
             </tr>
           </thead>
           <tbody class="[&_tr:last-child]:border-0">
