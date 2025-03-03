@@ -36,7 +36,11 @@
                 class="p-4 align-middle"
               >
                 <slot :name="`item.${header.value}`" :item="item">
-                  <span> {{ item?.[header?.value] }} </span>
+                  <template v-if="typeof item[header.value] === 'boolean'">
+                    <span v-if="item[header.value]">Sim</span>
+                    <span v-else>Não</span>
+                  </template>
+                  <span v-else> {{ item?.[header?.value] }} </span>
                 </slot>
               </td>
             </tr>
