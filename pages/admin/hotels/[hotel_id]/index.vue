@@ -82,7 +82,7 @@
       :hotel-id
       @saved="getList"
     />
-    <HotelGallery v-model="showImageManager" :hotel-id="hotelId" />
+    <HotelGalleryModal v-model="showImageManager" :hotel-id="hotelId" :hotel-name="hotelName" />
   </div>
 </template>
 
@@ -102,7 +102,7 @@ import Input from "~/components/ui/input/Input.vue"
 import Button from "~/components/ui/button/Button.vue"
 import { HotelService } from "~/infra/service/HotelService"
 import { ImageIcon } from "lucide-vue-next"
-import HotelGallery from "~/src/components/HotelGallery.vue"
+import HotelGalleryModal from "~/src/components/HotelGalleryModal.vue"
 
 const showEditRoomModal = ref<boolean>(false)
 const showImageManager = ref<boolean>(false)

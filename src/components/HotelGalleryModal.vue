@@ -1,5 +1,11 @@
 <template>
-  <BaseModal v-model="modelValue" class="p-4" width="800px">
+  <BaseModal
+    v-model="modelValue"
+    class="p-4"
+    :title="`Galeria de imagens | ${props.hotelName}`"
+    width="800px"
+    description="Aqui você pode atualizar e organizar as imagens do hotel, fazendo o upload e arrastando e soltando as imagens"
+  >
     <div
       class="mb-6 border-2 border-dashed p-8 rounded-lg text-center"
       :class="{
@@ -32,7 +38,7 @@
           accept="image/*"
           class="hidden"
           @change="handleFileInput"
-        />
+        >
         <Button
           class="px-4 py-2 rounded transition"
           @click="$refs.fileInput.click()"
@@ -48,11 +54,14 @@
       style="grid-template-columns: 1fr 1fr 1fr"
       item-key="path"
       :animation="200"
-      @end="saveImageOrder"
+      @end="handleSaveImageOrder"
     >
-      <template #item="{ element: image }">
+      <template #item="{ element: image, index }">
         <div
           class="relative w-[32px] h-[32px] rounded-lg group cursor-move shadow-lg"
+          :class="{
+            'animate-drag': animate && index <= 1,
+          }"
         >
           <img
             class="w-full h-full rounded-lg object-cover"
@@ -79,20 +88,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from "vue"
+import { ref } from "vue"
 import draggable from "vuedraggable"
 import BaseModal from "./@base/BaseModal.vue"
 import { HotelImageService } from "~/infra/service/HotelImageService"
 import Button from "~/components/ui/button/Button.vue"
 
 interface ImageInfo {
+  id: number
   url: string
   path: string
   order: number
   isDeleting?: boolean
 }
-const modelValue = ref(false)
-const props = defineProps<{ hotelId: number }>()
+const modelValue = defineModel<boolean>()
+const props = defineProps<{ hotelId: number; hotelName: string }>()
 
 const images = ref<ImageInfo[]>([])
 const isDragging = ref(false)
@@ -104,9 +114,10 @@ async function loadImages() {
   if (response.error) return
 
   images.value = response.data.map((image: any) => ({
+    id: image.id,
     url: image.publicUrl,
-    path: image.pathImage,
-    order: image.imageOrder,
+    path: image.path,
+    order: image.order,
   }))
 }
 
@@ -155,20 +166,79 @@ function handleFileInput(e: Event) {
   uploadImages(input.files)
 }
 
-async function saveImageOrder() {
-  isSavingOrder.value = true
-  try {
-    // Update the order property of each image
-    images.value = images.value.map((img, index) => ({ ...img, order: index }))
+async function handleSaveImageOrder() {
+  const imagesListOrdered = images.value.map((img, index) => ({
+    ...img,
+    order: index * 10,
+  }))
 
-    // Here you would typically save the order to your database
-    // For now, we'll just show a success message
-    console.log("New order saved:", images.value)
-  } catch (error) {
-    console.error("Error saving image order:", error)
-  } finally {
-    isSavingOrder.value = false
+  isSavingOrder.value = true
+  const response = await hotelImageService.updateOrder(
+    props.hotelId,
+    imagesListOrdered
+  )
+  isSavingOrder.value = false
+
+  if (response.error) return
+  images.value = imagesListOrdered
+}
+
+const animate = ref(false)
+
+watch(
+  () => modelValue.value,
+  async () => {
+    await loadImages()
+    animate.value = true
+    setTimeout(() => (animate.value = false), 1200)
+  }
+)
+</script>
+
+<style lang="scss" scoped>
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
-onMounted(() => loadImages())
-</script>
+
+@keyframes dragEffect-left {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translate(246px, 0px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes dragEffect-right {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translate(-246px, 0px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.animate-drag {
+  &:first-child {
+    animation: dragEffect-left 1s ease-in-out infinite alternate;
+    z-index: 1000;
+  }
+  &:nth-child(2) {
+    animation: dragEffect-right 1s ease-in-out infinite alternate;
+    z-index: 999;
+  }
+}
+</style>

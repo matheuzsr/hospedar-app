@@ -15,6 +15,31 @@ export class HotelImageService extends AbstractService {
     }
   }
 
+  public async getList(hotelId: number) {
+    try {
+      const response = await customFetch(`/api/admin/hotels/${hotelId}/images`, {
+        method: "GET",
+      })
+
+      return { data: this.formatSnakeToCamelList(response), error: false }
+    } catch (error: any) {
+      return { data: error, error: true }
+    }
+  }
+
+  public async updateOrder(hotelId: number, images: { id: number; order: number }[]) {
+    try {
+      const response = await customFetch(`/api/admin/hotels/${hotelId}/images/order`, {
+        method: "PUT",
+        body: { images },
+      })
+
+      return { data: response.data, error: false }
+    } catch (error: any) {
+      return { data: error, error: true }
+    }
+  }
+
   public async upload(hotelId: number, name: string, file: File) {
     const response = await customFetch(`/api/admin/hotels/${hotelId}/images`, {
       method: "POST",
@@ -32,17 +57,5 @@ export class HotelImageService extends AbstractService {
     formData.append("name", name)
 
     return formData
-  }
-
-  public async getList(hotelId: number) {
-    try {
-      const response = await customFetch(`/api/admin/hotels/${hotelId}/images`, {
-        method: "GET",
-      })
-
-      return { data: this.formatSnakeToCamelList(response), error: false }
-    } catch (error: any) {
-      return { data: error, error: true }
-    }
   }
 }

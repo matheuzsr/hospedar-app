@@ -7,7 +7,7 @@ export class HotelImageService {
       .from('hotel_image')
       .update({ deleted_at: new Date() })
       .eq('hotel_id', hotelId)
-      .eq('path_image', imagePath)
+      .eq('path', imagePath)
       .select().single()
     if (error || !data) throw new InternalServerError(`Error deleting image hotel ${hotelId} path ${imagePath}`)
 
@@ -34,15 +34,22 @@ export class HotelImageService {
 
     if (!response.data.publicUrl) return new InternalServerError("Error to get public url")
 
-    const { error: errorSaveDataBase, data: dataSavedDataBase } = await supabase.from('hotel_image').insert({ hotel_id: hotelId, image_name: fileName, public_url: response.data.publicUrl, path_image: path }).select().single()
+    const { error: errorSaveDataBase, data: dataSavedDataBase } = await supabase.from('hotel_image').insert({ hotel_id: hotelId, image_name: fileName, public_url: response.data.publicUrl, path: path }).select().single()
     if (errorSaveDataBase) return new InternalServerError(errorSaveDataBase.message)
 
     return dataSavedDataBase
   }
 
   public async getList(hotelId: number) {
-    const { data, error } = await supabase.from("hotel_image").select().eq('hotel_id', hotelId).is('deleted_at', null).order('image_order', { nullsFirst: false })
+    const { data, error } = await supabase.from("hotel_image").select().eq('hotel_id', hotelId).is('deleted_at', null).order('order', { nullsFirst: false })
     if (error) return new InternalServerError(`Error getting images from hotel ${hotelId}`)
+
+    return data
+  }
+
+  public async updateOrder(hotelId: number, images: { id: number, order: number }[]) {
+    const { data, error } = await supabase.from('hotel_image').upsert(images)
+    if (error) return new InternalServerError(`Error updating order from hotel ${hotelId}`)
 
     return data
   }

@@ -21,4 +21,12 @@ export class HotelImageController {
 
     return this.service.upload(hotelId, fileName, file)
   }
+
+  public async updateOrder(hotelId: number, images: { id: number; order: number }[]) {
+    if (!hotelId) throw new ValidationError('Hotel ID is required')
+    if (!images?.length) throw new ValidationError('Images is required')
+    const imageParsed = images.map(image => ({ id: image.id, order: image.order }))
+
+    return this.service.updateOrder(hotelId, imageParsed)
+  }
 }
