@@ -67,7 +67,7 @@
             class="w-full h-full rounded-lg object-cover"
             :src="image.url"
             alt="Hotel image"
-          />
+          >
           <div
             class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-40 transition-all duration-300 flex items-center justify-center"
           >
@@ -102,7 +102,9 @@ interface ImageInfo {
   isDeleting?: boolean
 }
 const modelValue = defineModel<boolean>()
-const props = defineProps<{ hotelId: number; hotelName: string }>()
+const props = withDefaults(defineProps<{ hotelId: number; hotelName?: string }>(), {
+  hotelName: ''
+})
 
 const images = ref<ImageInfo[]>([])
 const isDragging = ref(false)
