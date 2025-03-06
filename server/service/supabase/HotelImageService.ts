@@ -1,4 +1,4 @@
-import { supabase } from "~/lib/supabase"
+import { supabase } from "~/infra/SupabaseAdapter"
 import { InternalServerError } from "~/server/errors/errors"
 
 export class HotelImageService {
