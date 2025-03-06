@@ -1,7 +1,8 @@
 import { camelToSnake, replaceObjectKeys, snakeToCamel } from "~/server/helper/properties.helper"
 import { customFetch } from "."
+import { AbstractService } from "./AbstractService"
 
-export class HotelService {
+export class HotelService extends AbstractService {
   async getList() {
     try {
       const response = await customFetch("/api/admin/hotels")
@@ -41,9 +42,5 @@ export class HotelService {
     const formattedData = replaceObjectKeys(data, camelToSnake)
 
     return customFetch(`/api/admin/hotels`, { method: 'POST', body: JSON.stringify((formattedData)) })
-  }
-
-  private formatSnakeToCamelList(list: any) {
-    return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
   }
 }

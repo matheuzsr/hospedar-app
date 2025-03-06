@@ -7,13 +7,22 @@
             Gerenciamento de hotel
             <template v-if="hotelName">| {{ hotelName }}</template>
           </h1>
-          <Button
-            class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-700 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
-            @click="handleEditRoom"
-          >
-            <PlusIcon class="w-5 h-5 mr-2" />
-            Novo Quarto
-          </Button>
+          <div class="flex gap-4">
+            <Button
+              class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors"
+              @click="handleShowImageManager"
+            >
+              <ImageIcon class="w-5 h-5 mr-2" />
+              Gestão de Imagens
+            </Button>
+            <Button
+              class="inline-flex items-center px-6 py-3 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-slate-700 hover:bg-slate-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-slate-500 transition-colors"
+              @click="handleEditRoom"
+            >
+              <PlusIcon class="w-5 h-5 mr-2" />
+              Novo Quarto
+            </Button>
+          </div>
         </div>
       </div>
     </div>
@@ -73,6 +82,7 @@
       :hotel-id
       @saved="getList"
     />
+    <HotelGallery v-model="showImageManager" :hotel-id="hotelId" />
   </div>
 </template>
 
@@ -91,8 +101,11 @@ import RoomEditModal from "~/src/components/RoomEditModal.vue"
 import Input from "~/components/ui/input/Input.vue"
 import Button from "~/components/ui/button/Button.vue"
 import { HotelService } from "~/infra/service/HotelService"
+import { ImageIcon } from "lucide-vue-next"
+import HotelGallery from "~/src/components/HotelGallery.vue"
 
 const showEditRoomModal = ref<boolean>(false)
+const showImageManager = ref<boolean>(false)
 const editRoomData = ref({})
 const room = ref()
 const search = ref("")
@@ -217,6 +230,10 @@ async function getHotelData() {
 const router = useRouter()
 function goBack() {
   router.push("/admin/hotels")
+}
+
+function handleShowImageManager() {
+  showImageManager.value = true
 }
 
 onBeforeMount(async () => getHotelData())

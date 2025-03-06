@@ -45,5 +45,4 @@ export class RoomService {
   private formatSnakeToCamelList(list: any) {
     return list.map((item: any) => replaceObjectKeys(item, snakeToCamel))
   }
-
 }
